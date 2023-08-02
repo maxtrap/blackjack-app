@@ -1,8 +1,11 @@
 package com.example.blackjack.model
 
+import androidx.annotation.DrawableRes
+
 data class PlayingCard(
     val suit: Suit,
-    val rank: Rank
+    val rank: Rank,
+    @DrawableRes val imageRes: Int
 )
 
 enum class Suit {
