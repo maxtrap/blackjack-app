@@ -1,7 +1,5 @@
 package com.example.blackjack.model
 
-import org.jetbrains.annotations.TestOnly
-
 
 //Hand is meant to represent a read-only version of PlayableHand
 interface Hand {
@@ -52,6 +50,11 @@ class PlayableHand(
     val hand: Hand = handImpl
 
 
+    init {
+        if (hand.sum >= 21)
+            payout()
+    }
+
     constructor(deck: ShuffledDeck, game: PayoutObserver, bet: Int) : this(
         deck,
         game,
@@ -67,7 +70,6 @@ class PlayableHand(
 
         handImpl.cardsImpl.add(deck.draw())
         if (handImpl.sum >= 21) {
-            isHandExpired = true
             payout()
         }
     }
@@ -76,7 +78,6 @@ class PlayableHand(
         if (isHandExpired)
             throwHandExpired()
 
-        isHandExpired = true
         payout()
     }
 
@@ -86,7 +87,6 @@ class PlayableHand(
 
         handImpl.cardsImpl.add(deck.draw())
         handImpl.betImpl *= 2
-        isHandExpired = true
         payout()
     }
 
@@ -119,17 +119,9 @@ class PlayableHand(
 
 
     private fun payout() {
-        game.onPayout(listOf(handImpl))
         isHandExpired = true
+        game.onPayout(listOf(handImpl))
     }
-
-    @TestOnly
-    internal constructor(cards: MutableList<PlayingCard>) : this(
-        ShuffledDeck(),
-        BlackjackGame(),
-        0,
-        *cards.toTypedArray()
-    )
 
 }
 

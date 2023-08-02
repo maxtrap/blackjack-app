@@ -3,12 +3,18 @@ package com.example.blackjack.model
 class BlackjackGame : PayoutObserver {
 
     private val deck = ShuffledDeck()
-    private var dealerHand = createStartingHand()
+    private var handInPlay = false
 
 
-    private fun createStartingHand() = PlayableHand(deck, this, 100)
+    fun getPlayerHand(): PlayableHand? {
+        if (handInPlay)
+            return null
+
+        handInPlay = true
+        return PlayableHand(deck, this, 100)
+    }
     override fun onPayout(hands: List<Hand>) {
-        TODO("Not yet implemented")
+        handInPlay = false
     }
 
 
