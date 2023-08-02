@@ -2,6 +2,6 @@ package com.example.blackjack.model
 
 interface PayoutObserver {
 
-    fun payout(hands: List<Hand>)
+    fun onPayout(hands: List<Hand>)
 
 }

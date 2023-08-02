@@ -6,8 +6,10 @@ class BlackjackGame : PayoutObserver {
     private var dealerHand = createStartingHand()
 
 
-    private fun createStartingHand() = PlayableHand(deck, this)
-
+    private fun createStartingHand() = PlayableHand(deck, this, 100)
+    override fun onPayout(hands: List<Hand>) {
+        TODO("Not yet implemented")
+    }
 
 
 }
