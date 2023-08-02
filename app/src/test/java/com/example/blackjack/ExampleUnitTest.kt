@@ -1,10 +1,8 @@
 package com.example.blackjack
 
-import com.example.blackjack.model.Hand
+import com.example.blackjack.model.PlayableHand
 import com.example.blackjack.model.PlayingCard
-import com.example.blackjack.model.Rank
 import com.example.blackjack.model.Rank.*
-import com.example.blackjack.model.Suit
 import com.example.blackjack.model.Suit.*
 import org.junit.Test
 
@@ -28,11 +26,11 @@ class ExampleUnitTest {
 
     @Test
     fun handSumsCorrectly() {
-        assertEquals(21, Hand(mutableListOf(PlayingCard(SPADES, RANK_10), PlayingCard(SPADES, RANK_A))).sum)
-        assertEquals(21, Hand(mutableListOf(PlayingCard(SPADES, RANK_K), PlayingCard(SPADES, RANK_A))).sum)
-        assertEquals(19, Hand(mutableListOf(PlayingCard(SPADES, RANK_K), PlayingCard(SPADES, RANK_A), PlayingCard(SPADES, RANK_8))).sum)
-        assertEquals(13, Hand(mutableListOf(PlayingCard(SPADES, RANK_K), PlayingCard(SPADES, RANK_A), PlayingCard(SPADES, RANK_A), PlayingCard(SPADES, RANK_A))).sum)
-        assertEquals(12, Hand(mutableListOf(PlayingCard(SPADES, RANK_K), PlayingCard(SPADES, RANK_A), PlayingCard(SPADES, RANK_A))).sum)
-        assertEquals(22, Hand(mutableListOf(PlayingCard(SPADES, RANK_K), PlayingCard(SPADES, RANK_10), PlayingCard(SPADES, RANK_A), PlayingCard(SPADES, RANK_A))).sum)
+        assertEquals(21, PlayableHand(mutableListOf(PlayingCard(SPADES, RANK_10), PlayingCard(SPADES, RANK_A))).sum)
+        assertEquals(21, PlayableHand(mutableListOf(PlayingCard(SPADES, RANK_K), PlayingCard(SPADES, RANK_A))).sum)
+        assertEquals(19, PlayableHand(mutableListOf(PlayingCard(SPADES, RANK_K), PlayingCard(SPADES, RANK_A), PlayingCard(SPADES, RANK_8))).sum)
+        assertEquals(13, PlayableHand(mutableListOf(PlayingCard(SPADES, RANK_K), PlayingCard(SPADES, RANK_A), PlayingCard(SPADES, RANK_A), PlayingCard(SPADES, RANK_A))).sum)
+        assertEquals(12, PlayableHand(mutableListOf(PlayingCard(SPADES, RANK_K), PlayingCard(SPADES, RANK_A), PlayingCard(SPADES, RANK_A))).sum)
+        assertEquals(22, PlayableHand(mutableListOf(PlayingCard(SPADES, RANK_K), PlayingCard(SPADES, RANK_10), PlayingCard(SPADES, RANK_A), PlayingCard(SPADES, RANK_A))).sum)
     }
 }
