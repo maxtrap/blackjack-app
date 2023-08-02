@@ -16,9 +16,9 @@ class HandExpiredException : Exception("This hand is no longer playable")
 
 class PlayableHand(
     private val deck: ShuffledDeck,
-    private val game: PayoutObserver,
-    bet: Int,
     vararg startingCards: PlayingCard,
+    private val game: PayoutObserver? = null,
+    bet: Int = 0,
     val splitAllowed: Boolean = true
 ) {
 
@@ -55,12 +55,13 @@ class PlayableHand(
             payout()
     }
 
-    constructor(deck: ShuffledDeck, game: PayoutObserver, bet: Int) : this(
+    constructor(deck: ShuffledDeck, game: PayoutObserver? = null, bet: Int = 0, splitAllowed: Boolean = false) : this(
         deck,
-        game,
-        bet,
         deck.draw(),
-        deck.draw()
+        deck.draw(),
+        game = game,
+        bet = bet,
+        splitAllowed = splitAllowed
     )
 
 
@@ -111,22 +112,22 @@ class PlayableHand(
         vararg cards: PlayingCard
     ): PlayableHand = PlayableHand(
         deck,
-        payoutObserver,
-        hand.bet,
         *cards,
-        splitAllowed = false
+        splitAllowed = false,
+        game = payoutObserver,
+        bet = hand.bet
     )
 
 
     private fun payout() {
         isHandExpired = true
-        game.onPayout(listOf(handImpl))
+        game?.onPayout(listOf(handImpl))
     }
 
 }
 
 
-class SplitHand(initialHand: PlayableHand, private val game: PayoutObserver) : PayoutObserver {
+class SplitHand(initialHand: PlayableHand, private val game: PayoutObserver?) : PayoutObserver {
 
     private var isHandExpired = false
 
@@ -152,7 +153,7 @@ class SplitHand(initialHand: PlayableHand, private val game: PayoutObserver) : P
     override fun onPayout(hands: List<Hand>) {
         if (hand1.isHandExpired && hand2.isHandExpired) {
             isHandExpired = true
-            game.onPayout(listOf(hand1.hand, hand2.hand))
+            game?.onPayout(listOf(hand1.hand, hand2.hand))
         }
     }
 
