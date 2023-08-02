@@ -6,17 +6,18 @@ import org.jetbrains.annotations.TestOnly
 interface Hand {
     val cards: List<PlayingCard>
     val sum: Int
+    val bet: Int
 }
 
 
 class HandExpiredException : Exception("This hand is no longer playable")
 
-class PlayableHand(private val deck: ShuffledDeck, private val game: PayoutObserver) {
+class PlayableHand(private val deck: ShuffledDeck, private val game: PayoutObserver, bet: Int) {
 
 
     private var isHandExpired = false
 
-    private class HandImpl(val cardsImpl: MutableList<PlayingCard>) : Hand {
+    private class HandImpl(val cardsImpl: MutableList<PlayingCard>, var betImpl: Int) : Hand {
         override val cards: List<PlayingCard>
             get() = cardsImpl
 
@@ -29,14 +30,14 @@ class PlayableHand(private val deck: ShuffledDeck, private val game: PayoutObser
                     sum += 10
                 return sum
             }
+
+        override val bet: Int
+            get() = betImpl
     }
 
 
 
-    private val hand = HandImpl(mutableListOf(deck.draw(), deck.draw()))
-
-
-
+    private val hand = HandImpl(mutableListOf(deck.draw(), deck.draw()), bet)
 
 
 
@@ -48,6 +49,22 @@ class PlayableHand(private val deck: ShuffledDeck, private val game: PayoutObser
         if (hand.sum >= 21) {
             payout()
         }
+    }
+
+    fun stand() {
+        if (isHandExpired)
+            throwHandExpired()
+
+        payout()
+    }
+
+    fun doubleDown() {
+        if (isHandExpired)
+            throwHandExpired()
+
+        hand.cardsImpl.add(deck.draw())
+        hand.betImpl *= 2
+        payout()
     }
 
     
