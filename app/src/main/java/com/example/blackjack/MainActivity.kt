@@ -35,6 +35,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.example.blackjack.model.BlackjackGame
 import com.example.blackjack.model.ShuffledDeck
@@ -132,23 +133,25 @@ fun PlayingCardImage(@DrawableRes imageRes: Int, modifier: Modifier = Modifier) 
 }
 
 
-private const val CARD_SPACING = 10
+private const val DEGREE_SPACING = 5
 
+private data class CardPosition(val xOffset: Int, val yOffset: Int)
 
 @Composable
 fun RowOfCards(modifier: Modifier = Modifier, @DrawableRes vararg cardRes: Int) {
 
-    val firstOffset = -(CARD_SPACING * cardRes.size / 2)
-
+    val firstRotation = -(DEGREE_SPACING * cardRes.size / 2)
 
     Box(
         modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
         cardRes.forEachIndexed { index, cardRes ->
+            val cardRotation = firstRotation + (DEGREE_SPACING * index)
             PlayingCardImage(
                 cardRes,
-                Modifier.offset(x = (firstOffset + CARD_SPACING * index).dp)
+                Modifier
+                    .rotate(cardRotation.toFloat())
             )
         }
 
