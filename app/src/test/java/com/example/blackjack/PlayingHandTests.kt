@@ -4,8 +4,10 @@ import com.example.blackjack.model.BlackjackGame
 import com.example.blackjack.model.HandExpiredException
 import com.example.blackjack.model.PlayableHand
 import com.example.blackjack.model.PlayingCard
+import com.example.blackjack.model.Rank
 import com.example.blackjack.model.Rank.*
 import com.example.blackjack.model.ShuffledDeck
+import com.example.blackjack.model.Suit
 import com.example.blackjack.model.Suit.*
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
@@ -25,6 +27,10 @@ class PlayingHandTests {
         hand = PlayableHand(ShuffledDeck(), PlayingCard(SPADES, RANK_7), PlayingCard(SPADES, RANK_A), PlayingCard(SPADES, RANK_A))
         assertEquals(19, hand.hand.sum)
 
+    }
+
+    private fun PlayingCard(suit: Suit, rank: Rank): PlayingCard {
+        return PlayingCard(suit, rank, R.drawable.hearts_ace)
     }
 
 

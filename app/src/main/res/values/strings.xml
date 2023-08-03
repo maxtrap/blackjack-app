@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Blackjack</string>
+    <string name="dealer_total_text">Dealer total: %d</string>
+    <string name="hit">Hit</string>
+    <string name="stand">Stand</string>
+    <string name="double_down">Double Down</string>
+    <string name="split">Split</string>
+    <string name="your_total">Your total: %s</string>
 </resources>
