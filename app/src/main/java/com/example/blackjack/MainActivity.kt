@@ -86,13 +86,13 @@ fun MainBlackjackScreen(modifier: Modifier = Modifier) {
     ) {
         Column {
             RowOfCards(
-                modifier = Modifier
-                    .padding(top = 16.dp, bottom = 32.dp)
-                    .fillMaxWidth(),
                 listOf(
                     R.drawable.back_of_card,
                     ShuffledDeck().draw().imageRes
-                )
+                ),
+                modifier = Modifier
+                    .padding(top = 16.dp, bottom = 16.dp)
+                    .fillMaxWidth(),
             )
             DealerTotal()
         }

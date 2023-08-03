@@ -24,13 +24,13 @@ private const val CARD_OFFSET_RADIUS = 130
 private data class CardPosition(val xOffset: Int, val yOffset: Int)
 
 @Composable
-fun RowOfCards(modifier: Modifier = Modifier, cardImages: List<Int>) {
+fun RowOfCards(cardImages: List<Int>, modifier: Modifier = Modifier) {
 
     val firstRotation = -(DEGREE_SPACING * (cardImages.size - 1) / 2)
     val centerOffset = findOffsetFromRotation(firstRotation).yOffset / 2
 
     Box(
-        modifier.fillMaxWidth(),
+        modifier,
         contentAlignment = Alignment.Center
     ) {
         cardImages.forEachIndexed { index, cardRes ->

@@ -74,22 +74,12 @@ fun PlayerHandView(modifier: Modifier = Modifier) {
         }
 
 
-        Box(
+        RowOfCards(
+            listOf(ShuffledDeck().draw().imageRes, ShuffledDeck().draw().imageRes),
             modifier = Modifier
-                .fillMaxWidth(),
-            contentAlignment = Center
-        ) {
-            PlayingCardImage(
-                ShuffledDeck().draw().imageRes,
-                modifier
-                    .padding(horizontal = 8.dp)
-            )
-            PlayingCardImage(
-                ShuffledDeck().draw().imageRes,
-                modifier
-                    .padding(horizontal = 8.dp)
-            )
-        }
+                .fillMaxWidth()
+                .padding(top = 16.dp)
+        )
 
 
         Text(
