@@ -27,6 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -37,6 +38,9 @@ import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import com.example.blackjack.model.BlackjackGame
 import com.example.blackjack.ui.theme.BlackjackTheme
+import com.google.accompanist.systemuicontroller.SystemUiController
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,6 +70,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun BlackjackApp() {
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -86,12 +91,27 @@ fun MainBlackjackScreen(modifier: Modifier = Modifier) {
     }
     onUpdate
 
+    val systemUiController: SystemUiController = rememberSystemUiController()
+
+    systemUiController.isStatusBarVisible = false // Status bar
+    systemUiController.isNavigationBarVisible = false // Navigation bar
+    systemUiController.isSystemBarsVisible = false // Status & Navigation bars
+
+
     Column(
         modifier = modifier
             .fillMaxHeight(),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Column {
+            Text(
+                text = stringResource(R.string.chip_total, BlackjackGame.playerBalance),
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .padding(top = 8.dp, end = 8.dp)
+            )
+
             RowOfCards(
                 if (BlackjackGame.isHandInPlay)
                     listOf(

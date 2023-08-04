@@ -156,7 +156,11 @@ fun PlayerHandView(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     BlackjackActionButton(
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                            thisHand.doubleDown()
+                            showPopupMessage = true
+                            updateUI()
+                        },
                         R.string.double_down,
                         modifier = Modifier.weight(1f)
                     )
