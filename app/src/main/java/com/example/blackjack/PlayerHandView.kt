@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -34,6 +35,7 @@ import com.example.blackjack.Split.NO_SPLIT
 import com.example.blackjack.Split.SPLIT_LEFT
 import com.example.blackjack.Split.SPLIT_RIGHT
 import com.example.blackjack.model.BlackjackGame
+import com.example.blackjack.model.BlackjackGame.isBlackjack
 import com.example.blackjack.ui.theme.BlackjackTheme
 import kotlinx.coroutines.delay
 
@@ -62,6 +64,12 @@ fun PlayerHandView(
         SPLIT_RIGHT -> BlackjackGame.splitHand!!.handRight
     }
 
+    if (thisHand.hand.isBlackjack()) {
+        showPopupMessage = true
+        if (split == NO_SPLIT || (BlackjackGame.splitHand!!.handLeft.hand.isBlackjack() && BlackjackGame.splitHand!!.handRight.hand.isBlackjack()))
+            isBlackjack = true
+    }
+
     Column(modifier = modifier) {
         if (showPopupMessage) {
             Column(
@@ -82,9 +90,16 @@ fun PlayerHandView(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(8.dp)
+                            .height(IntrinsicSize.Max)
                     ) {
+                        val message =
+                            if (split == NO_SPLIT || (BlackjackGame.splitHand!!.handLeft.isHandExpired && BlackjackGame.splitHand!!.handRight.isHandExpired)) {
+                                BlackjackGame.getHandWinner(thisHand.hand).message
+                            } else {
+                                R.string.pending
+                            }
                         Text(
-                            text = stringResource(BlackjackGame.getHandWinner(thisHand.hand).message),
+                            text = stringResource(message),
                             style = MaterialTheme.typography.displaySmall,
                             textAlign = TextAlign.Center
                         )
@@ -93,17 +108,16 @@ fun PlayerHandView(
                             BlackjackActionButton(
                                 onClick = {
                                     BlackjackGame.resetHands()
-                                    if (BlackjackGame.isHandInPlay) {
-                                        isBlackjack = false
-                                        showPopupMessage = false
-                                    }
+                                    isBlackjack = false
+                                    showPopupMessage = false
                                     updateUI()
                                 },
                                 textRes = R.string.continue_label,
                                 modifier
                                     .width(120.dp)
+                                    .height(40.dp)
                             )
-                        } else {
+                        } else if (split == NO_SPLIT || (BlackjackGame.splitHand!!.handLeft.isHandExpired && BlackjackGame.splitHand!!.handRight.isHandExpired)) {
                             LaunchedEffect(Unit) {
                                 delay(3000)
                                 BlackjackGame.resetHands()
@@ -132,7 +146,7 @@ fun PlayerHandView(
                     BlackjackActionButton(
                         onClick = {
                             thisHand.hit()
-                            if (!BlackjackGame.isHandInPlay) {
+                            if (thisHand.isHandExpired) {
                                 showPopupMessage = true
                             }
                             updateUI()
@@ -162,12 +176,17 @@ fun PlayerHandView(
                             updateUI()
                         },
                         R.string.double_down,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        enabled = thisHand.hand.cards.size <= 2
                     )
                     BlackjackActionButton(
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                            BlackjackGame.splitHand()
+                            updateUI()
+                        },
                         R.string.split,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        enabled = split == NO_SPLIT && thisHand.canSplit()
                     )
                 }
             }
@@ -196,15 +215,20 @@ fun PlayerHandView(
 fun BlackjackActionButton(
     onClick: () -> Unit,
     @StringRes textRes: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true
 ) {
     Button(
         onClick = onClick,
-        colors = ButtonDefaults.buttonColors(Color(0xff00a800)),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color(0xff00a800),
+            disabledContainerColor = Color(0xFF006D00)
+        ),
         shape = MaterialTheme.shapes.medium,
         elevation = ButtonDefaults.elevatedButtonElevation(8.dp),
         modifier = modifier,
-        contentPadding = PaddingValues(4.dp)
+        contentPadding = PaddingValues(4.dp),
+        enabled = enabled
     ) {
         Text(
             text = stringResource(textRes),

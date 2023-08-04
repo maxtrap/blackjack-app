@@ -42,6 +42,14 @@ object BlackjackGame : PayoutObserver {
         playerHand = PlayableHand(deck, this, 100)
     }
 
+    fun splitHand() {
+        if (splitHand != null)
+            return
+
+        splitHand = playerHand?.split()
+        playerHand = null
+    }
+
 
     override fun onPayout(hands: List<Hand>) {
         dealerHand.hitDealer()
@@ -79,5 +87,5 @@ object BlackjackGame : PayoutObserver {
         }
     }
 
-    private fun Hand.isBlackjack() = cards.size == 2 && sum == 21
+    fun Hand.isBlackjack() = cards.size == 2 && sum == 21
 }

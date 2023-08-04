@@ -11,12 +11,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -38,9 +40,6 @@ import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import com.example.blackjack.model.BlackjackGame
 import com.example.blackjack.ui.theme.BlackjackTheme
-import com.google.accompanist.systemuicontroller.SystemUiController
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,12 +90,6 @@ fun MainBlackjackScreen(modifier: Modifier = Modifier) {
     }
     onUpdate
 
-    val systemUiController: SystemUiController = rememberSystemUiController()
-
-    systemUiController.isStatusBarVisible = false // Status bar
-    systemUiController.isNavigationBarVisible = false // Navigation bar
-    systemUiController.isSystemBarsVisible = false // Status & Navigation bars
-
 
     Column(
         modifier = modifier
@@ -109,7 +102,7 @@ fun MainBlackjackScreen(modifier: Modifier = Modifier) {
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier
                     .align(Alignment.End)
-                    .padding(top = 8.dp, end = 8.dp)
+                    .padding(top = 16.dp, end = 8.dp)
             )
 
             RowOfCards(
@@ -121,14 +114,30 @@ fun MainBlackjackScreen(modifier: Modifier = Modifier) {
                 else
                     BlackjackGame.dealerHand.hand.cards.map { it.imageRes },
                 modifier = Modifier
-                    .padding(top = 24.dp, bottom = 24.dp)
+                    .padding(top = 16.dp, bottom = 24.dp)
                     .fillMaxWidth(),
             )
             DealerTotal(onUpdate)
         }
 
         Row {
-            PlayerHandView(onUpdate, { updateUI() })
+            if (BlackjackGame.splitHand == null)
+                PlayerHandView(onUpdate, { updateUI() })
+            else {
+                PlayerHandView(
+                    onUpdate,
+                    { updateUI() },
+                    split = Split.SPLIT_LEFT,
+                    modifier = Modifier.weight(1f)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                PlayerHandView(
+                    onUpdate,
+                    { updateUI() },
+                    split = Split.SPLIT_RIGHT,
+                    modifier = Modifier.weight(1f)
+                )
+            }
         }
     }
 }

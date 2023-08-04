@@ -15,4 +15,5 @@
     <string name="player_higher">You win!</string>
     <string name="chop">Chop. Both have same value hand.</string>
     <string name="chip_total">Chip total: $%d</string>
+    <string name="pending">Hand pending</string>
 </resources>

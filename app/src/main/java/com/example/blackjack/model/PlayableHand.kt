@@ -58,7 +58,7 @@ class PlayableHand(
             payout()
     }
 
-    constructor(deck: ShuffledDeck, game: PayoutObserver? = null, bet: Int = 0, splitAllowed: Boolean = false) : this(
+    constructor(deck: ShuffledDeck, game: PayoutObserver? = null, bet: Int = 0, splitAllowed: Boolean = true) : this(
         deck,
         deck.draw(),
         deck.draw(),
@@ -102,7 +102,7 @@ class PlayableHand(
             return null
 
         isHandExpired = true
-        return SplitHand(this, game)
+        return SplitHand(this, deck, game)
     }
 
     fun canSplit() = splitAllowed && hand.cards.size == 2 && hand.cards[0].rank == hand.cards[1].rank
@@ -130,21 +130,19 @@ class PlayableHand(
 }
 
 
-class SplitHand(initialHand: PlayableHand, private val game: PayoutObserver?) : PayoutObserver {
-
-    private var isHandExpired = false
+class SplitHand(initialHand: PlayableHand, deck: ShuffledDeck, private val game: PayoutObserver?) : PayoutObserver {
 
     val handLeft: PlayableHand =
-        initialHand.sameHandDifferentCards(payoutObserver = this, initialHand.hand.cards[0])
+        initialHand.sameHandDifferentCards(payoutObserver = this, initialHand.hand.cards[0], deck.draw())
     val handRight: PlayableHand =
-        initialHand.sameHandDifferentCards(payoutObserver = this, initialHand.hand.cards[1])
+        initialHand.sameHandDifferentCards(payoutObserver = this, initialHand.hand.cards[1], deck.draw())
 
-
-
+    init {
+        onPayout(listOf())
+    }
 
     override fun onPayout(hands: List<Hand>) {
-        if (handLeft.isHandExpired && handRight.isHandExpired) {
-            isHandExpired = true
+        if (handLeft?.isHandExpired == true && handRight?.isHandExpired == true) {
             game?.onPayout(listOf(handLeft.hand, handRight.hand))
         }
     }
