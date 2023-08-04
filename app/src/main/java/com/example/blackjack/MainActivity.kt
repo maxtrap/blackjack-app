@@ -64,7 +64,6 @@ class MainActivity : ComponentActivity() {
 }
 
 
-
 @Composable
 fun BlackjackApp() {
     Box(
@@ -161,7 +160,10 @@ fun DealerTotal(onUpdate: Boolean, modifier: Modifier = Modifier) {
         horizontalArrangement = Arrangement.Center
     ) {
         Text(
-            text = stringResource(R.string.dealer_total_text, BlackjackGame.dealerHand.hand.sum),
+            text = stringResource(
+                R.string.dealer_total_text,
+                if (BlackjackGame.isHandInPlay) BlackjackGame.dealerHand.firstCardValue else BlackjackGame.dealerHand.hand.sum
+            ),
             style = MaterialTheme.typography.displaySmall
         )
     }

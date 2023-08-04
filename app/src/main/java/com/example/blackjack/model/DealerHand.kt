@@ -9,4 +9,6 @@ class DealerHand(deck: ShuffledDeck) {
     }
 
     val hand = backingHand.hand
+
+    val firstCardValue = PlayableHand(deck, hand.cards[0]).hand.sum
 }
