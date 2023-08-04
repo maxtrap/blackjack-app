@@ -85,7 +85,8 @@ fun PlayerHandView(
                     ) {
                         Text(
                             text = stringResource(BlackjackGame.getHandWinner(thisHand.hand).message),
-                            style = MaterialTheme.typography.displaySmall
+                            style = MaterialTheme.typography.displaySmall,
+                            textAlign = TextAlign.Center
                         )
                         if (isBlackjack) {
                             Spacer(modifier = Modifier.height(8.dp))
@@ -104,7 +105,7 @@ fun PlayerHandView(
                             )
                         } else {
                             LaunchedEffect(Unit) {
-                                delay(2000)
+                                delay(3000)
                                 BlackjackGame.resetHands()
                                 if (BlackjackGame.isHandInPlay)
                                     showPopupMessage = false
@@ -140,7 +141,11 @@ fun PlayerHandView(
                         modifier = Modifier.weight(1f)
                     )
                     BlackjackActionButton(
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                            thisHand.stand()
+                            showPopupMessage = true
+                            updateUI()
+                        },
                         R.string.stand,
                         modifier = Modifier.weight(1f)
                     )
