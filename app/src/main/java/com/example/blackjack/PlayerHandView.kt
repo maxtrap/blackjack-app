@@ -23,7 +23,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.blackjack.Split.NO_SPLIT
 import com.example.blackjack.Split.SPLIT_LEFT
+import com.example.blackjack.Split.SPLIT_RIGHT
 import com.example.blackjack.model.BlackjackGame
 import com.example.blackjack.ui.theme.BlackjackTheme
 import kotlinx.coroutines.delay
@@ -55,6 +55,13 @@ fun PlayerHandView(
     var showPopupMessage by remember { mutableStateOf(!BlackjackGame.isHandInPlay) }
     var isBlackjack by remember { mutableStateOf(BlackjackGame.playerHand?.hand?.sum == 21) }
 
+
+    val thisHand = when (split) {
+        NO_SPLIT -> BlackjackGame.playerHand!!
+        SPLIT_LEFT -> BlackjackGame.splitHand!!.handLeft
+        SPLIT_RIGHT -> BlackjackGame.splitHand!!.handRight
+    }
+
     Column(modifier = modifier) {
         if (showPopupMessage) {
             Column(
@@ -67,7 +74,7 @@ fun PlayerHandView(
                     colors = CardDefaults.cardColors(Color(0xFF09750B)),
                     elevation = CardDefaults.elevatedCardElevation(8.dp),
                     modifier = Modifier
-                        .fillMaxWidth(0.8f)
+                        .fillMaxWidth(0.9f)
                         .padding(16.dp),
                 ) {
                     Column(
@@ -77,7 +84,7 @@ fun PlayerHandView(
                             .padding(8.dp)
                     ) {
                         Text(
-                            text = stringResource(R.string.blackjack),
+                            text = stringResource(BlackjackGame.getHandWinner(thisHand.hand).message),
                             style = MaterialTheme.typography.displaySmall
                         )
                         if (isBlackjack) {
@@ -123,7 +130,7 @@ fun PlayerHandView(
                 ) {
                     BlackjackActionButton(
                         onClick = {
-                            BlackjackGame.playerHand?.hit()
+                            thisHand.hit()
                             if (!BlackjackGame.isHandInPlay) {
                                 showPopupMessage = true
                             }
@@ -157,14 +164,8 @@ fun PlayerHandView(
             }
         }
 
-        val thisHand = (BlackjackGame.playerHand
-            ?: if (split == SPLIT_LEFT)
-                BlackjackGame.splitHand!!.handLeft
-            else
-                BlackjackGame.splitHand!!.handRight).hand
-
         RowOfCards(
-            thisHand.cards.map { it.imageRes },
+            thisHand.hand.cards.map { it.imageRes },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 16.dp)
@@ -172,7 +173,7 @@ fun PlayerHandView(
 
 
         Text(
-            text = stringResource(R.string.your_total, thisHand.sum),
+            text = stringResource(R.string.your_total, thisHand.hand.sum),
             style = MaterialTheme.typography.displaySmall,
             modifier = Modifier
                 .align(CenterHorizontally)

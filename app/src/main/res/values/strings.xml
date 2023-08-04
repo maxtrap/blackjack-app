@@ -6,6 +6,12 @@
     <string name="double_down">Double Down</string>
     <string name="split">Split</string>
     <string name="your_total">Your total: %s</string>
-    <string name="blackjack">Blackjack!</string>
     <string name="continue_label">Continue</string>
+    <string name="player_bust">You bust</string>
+    <string name="player_blackjack">You have blackjack!</string>
+    <string name="dealer_blackjack">Dealer has blackjack</string>
+    <string name="dealer_bust">Dealer busts!</string>
+    <string name="dealer_higher">Dealer wins</string>
+    <string name="player_higher">You win!</string>
+    <string name="chop">Chop. Both have same value hand.</string>
 </resources>

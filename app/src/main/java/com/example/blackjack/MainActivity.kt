@@ -71,23 +71,7 @@ fun BlackjackApp() {
             .fillMaxSize()
             .background(Color(0xff045900))
     ) {
-
         MainBlackjackScreen()
-    }
-}
-
-@Composable
-fun TitleBar(modifier: Modifier = Modifier) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(vertical = 16.dp),
-        horizontalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = stringResource(R.string.app_name),
-            style = MaterialTheme.typography.displayLarge
-        )
     }
 }
 
