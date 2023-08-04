@@ -6,4 +6,6 @@
     <string name="double_down">Double Down</string>
     <string name="split">Split</string>
     <string name="your_total">Your total: %s</string>
+    <string name="blackjack">Blackjack!</string>
+    <string name="continue_label">Continue</string>
 </resources>

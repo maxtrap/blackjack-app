@@ -9,7 +9,7 @@ data class PlayingCard(
 )
 
 enum class Suit {
-    ClUBS, DIAMONDS, HEARTS, SPADES
+    CLUBS, DIAMONDS, HEARTS, SPADES
 }
 
 enum class Rank(val rankValue: Int) {

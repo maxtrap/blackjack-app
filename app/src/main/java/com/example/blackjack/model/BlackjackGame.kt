@@ -1,32 +1,40 @@
 package com.example.blackjack.model
 
-class BlackjackGame(var playerBalance: Int = 0) : PayoutObserver {
+object BlackjackGame : PayoutObserver {
+
+    var playerBalance: Int = 1000
+        private set
 
     private val deck = ShuffledDeck()
-    private var handInPlay = false
-    private var dealerHand = DealerHand(deck)
+    var isHandInPlay = true
+        private set
+    var dealerHand = DealerHand(deck)
+        private set
+
+    var playerHand: PlayableHand? = PlayableHand(deck, this, 100)
+        private set
+
+    var splitHand: SplitHand? = null
+        private set
 
 
+    fun resetHands() {
+        if (isHandInPlay)
+            return
 
-    fun getPlayerHand(): PlayableHand? {
-        if (handInPlay)
-            return null
-
-        handInPlay = true
-        return PlayableHand(deck, this, 100)
+        dealerHand = DealerHand(deck)
+        splitHand = null
+        isHandInPlay = true
+        playerHand = PlayableHand(deck, this, 100)
     }
 
-
-    fun hitDealer() {
-        while (dealerHand.hit()) {}
-    }
 
     override fun onPayout(hands: List<Hand>) {
-        hitDealer()
+        dealerHand.hitDealer()
         hands.forEach {
             playerBalance += calculateWinnings(it)
         }
-        handInPlay = false
+        isHandInPlay = false
     }
 
     private fun calculateWinnings(hand: Hand): Int {

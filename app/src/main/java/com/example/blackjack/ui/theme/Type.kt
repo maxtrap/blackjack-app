@@ -20,14 +20,14 @@ val Typography = Typography(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Bold,
         fontSize = 32.sp,
-        lineHeight = 24.sp,
+        lineHeight = 32.sp,
         letterSpacing = 0.5.sp,
         color = Color.White
     ),
     displayLarge = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Bold,
-        fontSize = 64.sp,
+        fontSize = 48.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp,
         color = Color.White

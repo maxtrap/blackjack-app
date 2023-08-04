@@ -9,9 +9,6 @@ interface Hand {
 }
 
 
-class HandExpiredException : Exception("This hand is no longer playable")
-
-
 
 
 class PlayableHand(
@@ -35,13 +32,19 @@ class PlayableHand(
             get() {
                 var sum = cards.sumOf { it.rank.rankValue }
                 sum += cards.count { it.rank == Rank.RANK_A }
-                if (sum <= 11)
+                if (cards.any { it.rank == Rank.RANK_A } && sum <= 11)
                     sum += 10
                 return sum
             }
 
         override val bet: Int
             get() = betImpl
+
+        override fun toString(): String {
+            return "HandImpl(cardsImpl=$cardsImpl, betImpl=$betImpl)"
+        }
+
+
     }
 
 
@@ -67,7 +70,7 @@ class PlayableHand(
 
     fun hit() {
         if (isHandExpired)
-            throwHandExpired()
+            return
 
         handImpl.cardsImpl.add(deck.draw())
         if (handImpl.sum >= 21) {
@@ -77,14 +80,14 @@ class PlayableHand(
 
     fun stand() {
         if (isHandExpired)
-            throwHandExpired()
+            return
 
         payout()
     }
 
     fun doubleDown() {
         if (isHandExpired)
-            throwHandExpired()
+            return
 
         handImpl.cardsImpl.add(deck.draw())
         handImpl.betImpl *= 2
@@ -93,7 +96,7 @@ class PlayableHand(
 
     fun split(): SplitHand? {
         if (isHandExpired)
-            throwHandExpired()
+            return null
 
         if (!canSplit())
             return null
@@ -131,32 +134,19 @@ class SplitHand(initialHand: PlayableHand, private val game: PayoutObserver?) : 
 
     private var isHandExpired = false
 
-    private val hand1: PlayableHand =
+    val handLeft: PlayableHand =
         initialHand.sameHandDifferentCards(payoutObserver = this, initialHand.hand.cards[0])
-    private val hand2: PlayableHand =
+    val handRight: PlayableHand =
         initialHand.sameHandDifferentCards(payoutObserver = this, initialHand.hand.cards[1])
 
-    operator fun component1(): PlayableHand {
-        if (isHandExpired)
-            throwHandExpired()
 
-        return hand1
-    }
 
-    operator fun component2(): PlayableHand {
-        if (isHandExpired)
-            throwHandExpired()
-
-        return hand2
-    }
 
     override fun onPayout(hands: List<Hand>) {
-        if (hand1.isHandExpired && hand2.isHandExpired) {
+        if (handLeft.isHandExpired && handRight.isHandExpired) {
             isHandExpired = true
-            game?.onPayout(listOf(hand1.hand, hand2.hand))
+            game?.onPayout(listOf(handLeft.hand, handRight.hand))
         }
     }
 
 }
-
-private fun throwHandExpired(): Nothing = throw HandExpiredException()
